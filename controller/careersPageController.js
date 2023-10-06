@@ -5,17 +5,29 @@ const { JSDOM } = jsdom;
 let careersPage = async (req, res) => {
     try {
         let response = await getData();
-        const dom = new JSDOM(response.data);
+        const dom = new JSDOM(response.data).window.document;
+        var arr = [];
         //console.log(dom.window.document.querySelectorAll(".department").textContent);
-        var els = dom.window.document.querySelectorAll('.department,.number-of-positions,.job-name');
-        els.forEach((el) => {
-            console.log(el.textContent,el.parentElement.textContent,el.childNodes.textContent);
-        });
+        //let parent = dom.querySelector('.job-posting')
+        let jobs = dom.querySelectorAll('.job-posting')
+        for(let i=0; i<jobs.length; i++) {
+            console.log(jobs[i].textContent);
+            let department = dom.querySelectorAll('.department')
+            for (let j=0; j<department.length; j++) {
+                let final = {};
+                console.log(department[j].textContent);
+                final.openings = jobs[i].textContent;
+                final.department = department[j].textContent.length
+                
+                arr.push(final)
+            }
+            
+        };
         //console.log(await response.data);
         //const root = parse(response.data);
         //console.log(root, response.data);
         //const department = root.querySelector("div");
-        res.status(200).send(response.data)
+        res.status(200).send(arr)
     } catch (error) {
         res.status(400).send(error)
     }
