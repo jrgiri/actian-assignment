@@ -6,6 +6,6 @@ app.get('/', (req, res) => {
     res.send("Welcome");
 })
 
-app.get('/careers', careersPage);
+app.get('/careers/:department', careersPage);
 
 module.exports = app;
